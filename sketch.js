@@ -1,3 +1,4 @@
+var timeStore;
 function preload(){
   mySong = loadSound('assets/SteinsGateOP.mp3')
   logoInverted = loadImage('assets/logo-alpha.png')
@@ -15,19 +16,22 @@ function setup() {
   mySong.play();
   imageMode(CENTER);
   strokeWeight(2);
+  timeStore = millis();
 }
 drawOverlay=1;
 var imgScale=10;
 var logoAlpha=0;
 var finalAlpha=0;
+var seconds;
 function draw() {
   //translate(width/2,height/2);
   background(0);
   volume = analyzer.getLevel();
   var waveform = fft.waveform();
   noFill();
-  if(millis()<28000){
-  if (millis()<20000){
+  seconds = (millis()-timeStore)/1000;
+  if(seconds<28){
+  if (seconds<20){
   push();
   translate(width/2,height/2);
   colorMode(HSB);
@@ -52,7 +56,7 @@ function draw() {
   } else {
     imgScale=1;
   }
-  if (millis()<10000) {
+  if (seconds<10) {
     translate(width/2,height/2);
     scale(imgScale);
     translate(-width/2,-height/2);
@@ -75,12 +79,12 @@ function draw() {
   } else {
     var imgVolume = 1;
   }
-  if (millis()<1000*17) {
+  if (seconds<14) {
     tint(255, volume*1000);
   }
   image(underline,width/2-imageSize.x/2,height/2-imageSize.y/2,imageSize.x/imgVolume,imageSize.y,0,0,imageSize.x*2/imgVolume,imageSize.y*2);
   pop();
-  if (millis()>1000*17) {
+  if (seconds>14) {
     push();
 
     if (logoAlpha<1.1) {
@@ -96,16 +100,17 @@ function draw() {
   }
   pop();
   }
-  if(millis()>25000) {
+  if(seconds>25) {
     if(finalAlpha<256){
       finalAlpha+=10;
     }
+    noStroke();
     fill(255,finalAlpha);
     rect(0,0,width,height);
     stroke(255);
     noFill();
     strokeWeight(2);
-    if(millis()>26000){
+    if(seconds>26){
     for (var j=0; j<5; j++) {
       stroke(255-(j*255/5+volume*1000))
       beginShape();
@@ -117,7 +122,7 @@ function draw() {
       endShape();
     }
     }
-    //tint(255,finalAlpha*255);
+    tint(255,finalAlpha*255);
     image(logoBorder,width/2,height/2,2268/2,567/2);
   }
 
