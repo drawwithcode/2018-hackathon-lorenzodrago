@@ -22,6 +22,7 @@ drawOverlay=1;
 var imgScale=10;
 var logoAlpha=0;
 var finalAlpha=0;
+var outlineAlpha=0;
 var seconds;
 function draw() {
   //translate(width/2,height/2);
@@ -122,7 +123,13 @@ function draw() {
       endShape();
     }
     }
-    tint(255,finalAlpha*255);
+    if(outlineAlpha<256) {
+      outlineAlpha+=10;
+    } else {
+      outlineAlpha=255;
+    }
+
+    tint(255,outlineAlpha);
     image(logoBorder,width/2,height/2,2268/2,567/2);
   }
 
